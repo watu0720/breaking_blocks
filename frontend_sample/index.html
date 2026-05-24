@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon_atoms.ico" type="image/x-icon">
+    <title>ブロック崩し（ローグライク型）</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <!-- ===== タイトル画面 ===== -->
+    <section id="title-screen" class="screen">
+        <!-- 背景パーティクル装飾 -->
+        <div class="bg-particles">
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+            <div class="particle p5"></div>
+            <div class="particle p6"></div>
+            <div class="particle p7"></div>
+            <div class="particle p8"></div>
+        </div>
+
+        <div class="title-content">
+            <!-- ロゴ・タイトル -->
+            <div class="title-logo">
+                <div class="title-icon">
+                    <div class="icon-block b1"></div>
+                    <div class="icon-block b2"></div>
+                    <div class="icon-block b3"></div>
+                    <div class="icon-block b4"></div>
+                    <div class="icon-block b5"></div>
+                    <div class="icon-block b6"></div>
+                </div>
+                <h1 class="game-title">
+                    <span class="title-main">BLOCK</span>
+                    <span class="title-sub">BREAKER</span>
+                </h1>
+                <p class="title-tagline">— ローグライク型 —</p>
+            </div>
+
+            <!-- 難易度選択 -->
+            <div class="difficulty-section">
+                <h2 class="section-label">DIFFICULTY</h2>
+                <div class="difficulty-options">
+                    <button class="diff-btn" data-level="easy">
+                        <span class="diff-name">EASY</span>
+                        <span class="diff-bar">
+                            <span class="diff-fill" style="width: 20%"></span>
+                        </span>
+                    </button>
+                    <button class="diff-btn active" data-level="normal">
+                        <span class="diff-name">NORMAL</span>
+                        <span class="diff-bar">
+                            <span class="diff-fill" style="width: 40%"></span>
+                        </span>
+                    </button>
+                    <button class="diff-btn" data-level="hard">
+                        <span class="diff-name">HARD</span>
+                        <span class="diff-bar">
+                            <span class="diff-fill" style="width: 60%"></span>
+                        </span>
+                    </button>
+                    <button class="diff-btn" data-level="vhard">
+                        <span class="diff-name">VERY HARD</span>
+                        <span class="diff-bar">
+                            <span class="diff-fill" style="width: 80%"></span>
+                        </span>
+                    </button>
+                    <button class="diff-btn" data-level="extreme">
+                        <span class="diff-name">EXTREME</span>
+                        <span class="diff-bar">
+                            <span class="diff-fill" style="width: 100%"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- スタートボタン -->
+            <button class="start-btn">
+                <span class="start-text">START GAME</span>
+                <span class="start-glow"></span>
+            </button>
+
+            <!-- ハイスコア -->
+            <div class="highscore-display">
+                <span class="hs-label">HIGH SCORE</span>
+                <span class="hs-value">1,284,500</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ゲームプレイ画面 ===== -->
+    <section id="game-screen" class="screen">
+
+        <!-- 上部HUD -->
+        <header class="game-hud">
+            <div class="hud-left">
+                <div class="hud-item score-display">
+                    <span class="hud-label">SCORE</span>
+                    <span class="hud-value score-value">0024800</span>
+                </div>
+                <div class="hud-item combo-display">
+                    <span class="hud-label">COMBO</span>
+                    <span class="hud-value combo-value">x12</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="hud-item wave-display">
+                    <span class="hud-label">WAVE</span>
+                    <span class="hud-value wave-value">03</span>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="hud-item lives-display">
+                    <span class="hud-label">LIVES</span>
+                    <div class="lives-icons">
+                        <span class="life-icon active">●</span>
+                        <span class="life-icon active">●</span>
+                        <span class="life-icon active">●</span>
+                        <span class="life-icon">●</span>
+                        <span class="life-icon">●</span>
+                    </div>
+                </div>
+                <div class="hud-item difficulty-badge">
+                    <span class="badge-text">NORMAL</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ゲームエリア -->
+        <div class="game-area-wrapper">
+
+            <!-- 左サイドバー：スキル＆アイテム -->
+            <aside class="side-panel left-panel">
+                <!-- スキルゲージ -->
+                <div class="skill-section">
+                    <h3 class="panel-title">SKILL</h3>
+                    <div class="skill-gauge">
+                        <div class="gauge-track">
+                            <div class="gauge-fill" style="height: 72%"></div>
+                        </div>
+                        <span class="gauge-label">72%</span>
+                    </div>
+                    <button class="skill-btn">
+                        <span class="skill-icon">⚡</span>
+                        <span class="skill-name">SLOW</span>
+                    </button>
+                </div>
+
+                <!-- アクティブアイテム -->
+                <div class="active-items">
+                    <h3 class="panel-title">ACTIVE</h3>
+                    <div class="item-slot active-slot">
+                        <span class="item-icon">🔷</span>
+                        <span class="item-name">拡大</span>
+                        <div class="item-timer">
+                            <div class="timer-fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="item-slot active-slot">
+                        <span class="item-icon">⚡</span>
+                        <span class="item-name">加速</span>
+                        <div class="item-timer">
+                            <div class="timer-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- メインゲームフィールド -->
+            <main class="game-field">
+                <div class="field-border">
+                    <div class="field-inner">
+
+                        <!-- ブロック配置エリア（シルエット風） -->
+                        <div class="blocks-container">
+                            <!-- Row 1 -->
+                            <div class="block-row">
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="block-row">
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block durable c3" data-hp="3">3</div>
+                                <div class="block durable c3" data-hp="3">3</div>
+                                <div class="block durable c3" data-hp="3">3</div>
+                                <div class="block durable c3" data-hp="3">3</div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                            </div>
+                            <!-- Row 3 -->
+                            <div class="block-row">
+                                <div class="block empty"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block special item-block">★</div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block special item-block">★</div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block empty"></div>
+                            </div>
+                            <!-- Row 4 -->
+                            <div class="block-row">
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block durable c5" data-hp="2">2</div>
+                                <div class="block normal c5"></div>
+                                <div class="block normal c5"></div>
+                                <div class="block durable c5" data-hp="2">2</div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                            </div>
+                            <!-- Row 5 -->
+                            <div class="block-row">
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c5"></div>
+                                <div class="block durable c5" data-hp="2">2</div>
+                                <div class="block durable c5" data-hp="2">2</div>
+                                <div class="block normal c5"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                            </div>
+                            <!-- Row 6 -->
+                            <div class="block-row">
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block durable c3" data-hp="3">3</div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c5"></div>
+                                <div class="block normal c5"></div>
+                                <div class="block normal c5"></div>
+                                <div class="block normal c5"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block durable c3" data-hp="3">3</div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                            </div>
+                            <!-- Row 7 -->
+                            <div class="block-row">
+                                <div class="block empty"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block special moving-block">↔</div>
+                                <div class="block normal c4"></div>
+                                <div class="block normal c4"></div>
+                                <div class="block special moving-block">↔</div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block empty"></div>
+                            </div>
+                            <!-- Row 8 -->
+                            <div class="block-row">
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c3"></div>
+                                <div class="block normal c2"></div>
+                                <div class="block normal c1"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                            </div>
+                            <!-- Row 9 - cracking -->
+                            <div class="block-row">
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block normal c1 cracking"></div>
+                                <div class="block normal c2 cracking"></div>
+                                <div class="block empty destroyed"></div>
+                                <div class="block empty destroyed"></div>
+                                <div class="block normal c2 cracking"></div>
+                                <div class="block normal c1 cracking"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                                <div class="block empty"></div>
+                            </div>
+                        </div>
+
+                        <!-- 落下中アイテム -->
+                        <div class="dropping-item item-paddle-expand" style="left: 45%; top: 62%;">
+                            <span>⬆</span>
+                        </div>
+                        <div class="dropping-item item-multiball" style="left: 68%; top: 55%;">
+                            <span>◆</span>
+                        </div>
+
+                        <!-- ボール -->
+                        <div class="ball main-ball" style="left: 48%; top: 70%;"></div>
+                        <div class="ball sub-ball" style="left: 35%; top: 58%;"></div>
+                        <div class="ball sub-ball" style="left: 62%; top: 50%;"></div>
+
+                        <!-- ボール軌跡（装飾） -->
+                        <div class="ball-trail" style="left: 47%; top: 72%;"></div>
+                        <div class="ball-trail" style="left: 46%; top: 74%;"></div>
+
+                        <!-- パドル -->
+                        <div class="paddle-area">
+                            <div class="paddle">
+                                <div class="paddle-glow"></div>
+                            </div>
+                        </div>
+
+                        <!-- 下部デッドゾーン -->
+                        <div class="dead-zone"></div>
+
+                    </div>
+                </div>
+            </main>
+
+            <!-- 右サイドバー：情報 -->
+            <aside class="side-panel right-panel">
+                <!-- ブロック残数 -->
+                <div class="blocks-info">
+                    <h3 class="panel-title">BLOCKS</h3>
+                    <div class="blocks-stat">
+                        <span class="stat-value">47</span>
+                        <span class="stat-label">/ 72</span>
+                    </div>
+                    <div class="blocks-progress">
+                        <div class="progress-fill" style="width: 35%"></div>
+                    </div>
+                </div>
+
+                <!-- ボール情報 -->
+                <div class="ball-info">
+                    <h3 class="panel-title">BALLS</h3>
+                    <div class="ball-stat">
+                        <span class="ball-count">3</span>
+                        <span class="ball-label">active</span>
+                    </div>
+                </div>
+
+                <!-- ブロック凡例 -->
+                <div class="legend-section">
+                    <h3 class="panel-title">LEGEND</h3>
+                    <div class="legend-item">
+                        <span class="legend-color normal-legend"></span>
+                        <span class="legend-text">通常</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color durable-legend"></span>
+                        <span class="legend-text">耐久</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color special-legend"></span>
+                        <span class="legend-text">特殊</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color item-legend"></span>
+                        <span class="legend-text">アイテム</span>
+                    </div>
+                </div>
+
+                <!-- 操作ガイド -->
+                <div class="controls-section">
+                    <h3 class="panel-title">CONTROLS</h3>
+                    <div class="control-key">
+                        <kbd>←</kbd><kbd>→</kbd>
+                        <span>移動</span>
+                    </div>
+                    <div class="control-key">
+                        <kbd>SPACE</kbd>
+                        <span>スキル</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- 下部ステータスバー -->
+        <footer class="game-footer">
+            <div class="footer-left">
+                <span class="time-label">TIME</span>
+                <span class="time-value">02:34</span>
+            </div>
+            <div class="footer-center">
+                <span class="bonus-text">NO MISS BONUS x1.5</span>
+            </div>
+            <div class="footer-right">
+                <span class="fps-label">FPS</span>
+                <span class="fps-value">60</span>
+            </div>
+        </footer>
+    </section>
+
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>

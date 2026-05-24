@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ブロック崩し（ローグライク型）</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+Mono:wght@600;700&family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="boot-overlay" class="boot-overlay boot-neon-light" aria-busy="true" aria-live="polite">
+      <div class="boot-inner">
+        <div class="boot-icon-row" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <p class="boot-logo"><span class="boot-logo-main">BLOCK</span> <span class="boot-logo-sub">LOAD</span></p>
+        <p class="boot-msg" id="boot-msg">読み込み中…</p>
+      </div>
+    </div>
+
+    <div id="app-shell">
+      <header class="top-bar top-bar-neon">
+        <div class="brand">
+          <span class="brand-mark brand-mark-neon" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </span>
+          <div class="brand-text">
+            <div class="brand-title">BLOCK BREAKER</div>
+            <div class="brand-sub" id="brand-sub">画像シルエットを崩し続ける、無限ウェーブ</div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button type="button" class="btn btn-tonal" id="btn-settings">設定</button>
+          <button type="button" class="btn btn-tonal" id="btn-exit-app" title="アプリ／タブを閉じます">終了</button>
+          <button type="button" class="btn btn-tonal" id="btn-quit" hidden>ゲームをやめる</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section id="screen-title" class="panel panel-title screen-title-neon">
+          <div class="bg-particles-neon" aria-hidden="true">
+            <span class="pt p1"></span><span class="pt p2"></span><span class="pt p3"></span><span class="pt p4"></span>
+            <span class="pt p5"></span><span class="pt p6"></span><span class="pt p7"></span><span class="pt p8"></span>
+          </div>
+          <div class="title-hero-neon">
+            <div class="title-icon-neon" aria-hidden="true">
+              <span class="ib ib1"></span><span class="ib ib2"></span><span class="ib ib3"></span>
+              <span class="ib ib4"></span><span class="ib ib5"></span><span class="ib ib6"></span>
+            </div>
+            <h1 class="game-title-display">
+              <span class="title-gradient">BLOCK</span>
+              <span class="title-solid">BREAKER</span>
+            </h1>
+            <p class="title-tagline" id="title-tagline">— ローグライク型 —</p>
+          </div>
+
+          <div class="title-layout">
+            <div class="title-main-col">
+              <p class="eyebrow eyebrow-neon" id="title-menu-label">メニュー</p>
+              <p class="title-summary" id="title-diff-summary"></p>
+              <div class="title-actions">
+                <button type="button" class="btn btn-secondary btn-neon-ghost" id="btn-pick-difficulty">難易度を選ぶ</button>
+                <button type="button" class="btn btn-primary btn-neon-start" id="btn-start"><span class="btn-neon-start-text">ゲーム開始</span></button>
+              </div>
+            </div>
+
+            <aside class="title-side-col">
+              <div class="score-card score-card-neon">
+                <div class="score-card-head score-card-head-row">
+                  <span class="score-card-title score-card-title-en">HIGH SCORE</span>
+                  <button type="button" class="btn btn-link" id="btn-highscores-detail">一覧を見る</button>
+                </div>
+                <ol class="score-list" id="highscore-list"></ol>
+                <p class="muted small" id="highscore-empty">記録がありません</p>
+              </div>
+            </aside>
+          </div>
+          <footer class="hint-bar hint-bar-neon">
+            <span id="hint-bar-a">難易度は「難易度を選ぶ」から変更</span><span id="hint-bar-b">Enter でゲーム開始</span><span id="hint-bar-c">ゲーム中 Esc で一時停止</span>
+          </footer>
+        </section>
+
+        <section id="screen-difficulty" class="panel panel-title screen-difficulty-neon" hidden>
+          <div class="bg-particles-neon particles-subtle" aria-hidden="true">
+            <span class="pt p1"></span><span class="pt p3"></span><span class="pt p5"></span><span class="pt p7"></span>
+          </div>
+          <p class="section-label-en">DIFFICULTY</p>
+          <p class="eyebrow eyebrow-neon" id="diff-screen-eyebrow">難易度選択</p>
+          <div class="difficulty-card difficulty-card-neon" role="listbox" aria-label="難易度">
+            <button type="button" class="diff-row diff-row-neon" data-level="easy" role="option">
+              <span class="diff-code">Easy</span>
+              <span class="diff-name" data-diff-level="easy">はじめて向け</span>
+              <span class="diff-bar" aria-hidden="true"><span class="diff-fill" style="width: 22%"></span></span>
+            </button>
+            <button type="button" class="diff-row diff-row-neon active" data-level="normal" role="option" aria-selected="true">
+              <span class="diff-code">Normal</span>
+              <span class="diff-name" data-diff-level="normal">標準</span>
+              <span class="diff-bar" aria-hidden="true"><span class="diff-fill" style="width: 42%"></span></span>
+            </button>
+            <button type="button" class="diff-row diff-row-neon" data-level="hard" role="option">
+              <span class="diff-code">Hard</span>
+              <span class="diff-name" data-diff-level="hard">要慣れ</span>
+              <span class="diff-bar" aria-hidden="true"><span class="diff-fill" style="width: 62%"></span></span>
+            </button>
+            <button type="button" class="diff-row diff-row-neon" data-level="veryHard" role="option">
+              <span class="diff-code">Very Hard</span>
+              <span class="diff-name" data-diff-level="veryHard">高難度</span>
+              <span class="diff-bar" aria-hidden="true"><span class="diff-fill" style="width: 82%"></span></span>
+            </button>
+            <button type="button" class="diff-row diff-row-neon" data-level="extreme" role="option">
+              <span class="diff-code">Extreme</span>
+              <span class="diff-name" data-diff-level="extreme">極限</span>
+              <span class="diff-bar" aria-hidden="true"><span class="diff-fill" style="width: 100%"></span></span>
+            </button>
+          </div>
+          <p class="diff-meta" id="diff-meta-d">速度 1.00× / パドル幅 1.00× / 密度 1.00×</p>
+          <div class="title-actions">
+            <button type="button" class="btn btn-secondary btn-neon-ghost" id="difficulty-back">戻る</button>
+            <button type="button" class="btn btn-primary btn-neon-start" id="difficulty-start"><span class="btn-neon-start-text">この難易度で開始</span></button>
+          </div>
+        </section>
+
+        <section id="screen-game" class="panel panel-game" hidden>
+          <div id="game-root" class="game-root"></div>
+        </section>
+      </main>
+    </div>
+
+      <div id="overlay-pause" class="overlay overlay-dark" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+          <h2 id="pause-title">一時停止</h2>
+          <p class="muted" id="pause-lead">プレイは停止しています。</p>
+          <div class="pause-stats" id="pause-stats" aria-label="現在の状況">
+            <div class="pause-stat"><span class="pause-stat-label" id="pause-lbl-score">スコア</span><span class="pause-stat-value mono" id="pause-score">0</span></div>
+            <div class="pause-stat"><span class="pause-stat-label" id="pause-lbl-wave">Wave</span><span class="pause-stat-value mono" id="pause-wave">1</span></div>
+            <div class="pause-stat"><span class="pause-stat-label" id="pause-lbl-lives">残機</span><span class="pause-stat-value mono" id="pause-lives">3</span></div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-primary" id="pause-resume">再開</button>
+            <button type="button" class="btn btn-secondary" id="pause-settings-btn">設定</button>
+            <button type="button" class="btn btn-secondary" id="pause-title-btn">タイトルへ</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="overlay-quit-confirm" class="overlay overlay-dark" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="quit-confirm-title">
+          <h2 id="quit-confirm-title">タイトルへ戻る</h2>
+          <p class="muted" id="quit-confirm-lead">タイトルに戻ると、このプレイは中断されハイスコアに記録されません。よろしいですか？</p>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="quit-cancel">キャンセル</button>
+            <button type="button" class="btn btn-primary" id="quit-confirm">タイトルへ</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="overlay-result" class="overlay" hidden>
+        <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="result-title">
+          <h2 id="result-title">GAME OVER</h2>
+          <div class="result-grid">
+            <div class="stat-block">
+              <div class="stat-label" id="result-lbl-score">最終スコア</div>
+              <div class="stat-value mono" id="result-score">0</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-label" id="result-lbl-wave">到達 Wave</div>
+              <div class="stat-value mono" id="result-wave">1</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-label" id="result-lbl-combo">最大コンボ</div>
+              <div class="stat-value mono" id="result-combo">0</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-label" id="result-lbl-time">プレイ時間</div>
+              <div class="stat-value mono" id="result-time">0:00</div>
+            </div>
+          </div>
+          <p class="badge-nomiss" id="result-nomiss" hidden>ノーミス達成</p>
+          <p class="badge-new" id="result-new-record" hidden>ハイスコア更新！</p>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-primary" id="result-retry">もう一度</button>
+            <button type="button" class="btn btn-secondary" id="result-highscores">ハイスコア一覧</button>
+            <button type="button" class="btn btn-secondary" id="result-home">タイトルへ</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="overlay-highscores" class="overlay overlay-dark" hidden>
+        <div class="modal wide highscores-modal" role="dialog" aria-modal="true" aria-labelledby="highscores-title">
+          <h2 id="highscores-title">ハイスコア一覧</h2>
+          <p class="muted small" id="highscores-empty-full" hidden>記録がありません</p>
+          <div class="highscores-table-wrap">
+            <table class="highscores-table" id="highscores-table" hidden>
+              <thead>
+                <tr>
+                  <th scope="col" id="highscores-th-rank">順位</th>
+                  <th scope="col" id="highscores-th-score">スコア</th>
+                  <th scope="col" id="highscores-th-wave">Wave</th>
+                  <th scope="col" id="highscores-th-diff">難易度</th>
+                  <th scope="col" id="highscores-th-date">日時</th>
+                </tr>
+              </thead>
+              <tbody id="highscores-tbody"></tbody>
+            </table>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-primary" id="highscores-close">閉じる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="overlay-settings" class="overlay" hidden>
+        <div class="modal wide settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+          <h2 id="settings-title">設定</h2>
+          <p class="muted small" id="settings-audio-note">音声（BGM／効果音）は未実装です。</p>
+          <div class="settings-body">
+            <fieldset class="fieldset">
+              <legend id="fieldset-access">操作・アクセシビリティ</legend>
+              <label class="field field-row">
+                <input type="checkbox" id="set-motion" />
+                <span id="set-motion-label">動きを減らす（演出を短くします）</span>
+              </label>
+              <label class="field">
+                <span id="set-lang-caption">表示言語</span>
+                <select id="set-lang">
+                  <option value="ja">日本語</option>
+                  <option value="en">English</option>
+                </select>
+              </label>
+              <div class="key-bind-block">
+                <span class="field-label" id="key-bind-heading">キー割り当て（ボタンを押してからキーを入力）</span>
+                <div class="key-grid">
+                  <label><span id="key-caption-left">左移動</span> <button type="button" class="key-cap" id="key-left" aria-live="polite"></button></label>
+                  <label><span id="key-caption-right">右移動</span> <button type="button" class="key-cap" id="key-right" aria-live="polite"></button></label>
+                  <label><span id="key-caption-pause">一時停止</span> <button type="button" class="key-cap" id="key-pause" aria-live="polite"></button></label>
+                  <label><span id="key-caption-skill">スキル</span> <button type="button" class="key-cap" id="key-skill" aria-live="polite"></button></label>
+                </div>
+                <p class="field-error" id="settings-key-error" hidden>同じキーが重複しています。</p>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend id="fieldset-log">ログ</legend>
+              <p class="muted small" id="log-lead">直近のイベントをテキストで保存できます（詳細設計のローカルログ方針）。</p>
+              <button type="button" class="btn btn-secondary" id="btn-export-logs">ログをエクスポート</button>
+            </fieldset>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="settings-cancel">キャンセル</button>
+            <button type="button" class="btn btn-primary" id="settings-save">保存</button>
+          </div>
+        </div>
+      </div>
+
+    <p id="toast-app" class="toast-app" hidden role="status"></p>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
