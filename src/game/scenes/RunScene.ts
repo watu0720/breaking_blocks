@@ -1109,18 +1109,11 @@ export default class RunScene extends Phaser.Scene {
 
       const bw = cellW - 4;
       const bh = cellH - 3;
-      // item ブロックのみ円形にして「何か出る」の視覚ヒント。それ以外は長方形。
-      const useCircle = spec.kind === 'item';
       let brick: Phaser.GameObjects.Shape;
       const strokeW = spec.kind === 'vanishing' ? 2 : 1;
       const strokeC = spec.kind === 'vanishing' ? 0x7c3aed : 0x1e293b;
 
-      if (useCircle) {
-        const r = Math.min(bw, bh) * 0.45;
-        brick = this.add.circle(cx, cy, r, tint);
-      } else {
-        brick = this.add.rectangle(cx, cy, bw, bh, tint);
-      }
+      brick = this.add.rectangle(cx, cy, bw, bh, tint);
       brick.setStrokeStyle(strokeW, strokeC, 0.4);
 
       brick.setData('hp', spec.hp);
